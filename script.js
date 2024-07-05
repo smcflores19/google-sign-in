@@ -1,13 +1,13 @@
-// The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
-const functions = require('firebase-functions');
-// The Firebase Admin SDK to access Firestore.
-const admin = require('firebase-admin');
-admin.initializeApp();
+// // The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
+// const functions = require('firebase-functions');
+// // The Firebase Admin SDK to access Firestore.
+// const admin = require('firebase-admin');
+// admin.initializeApp();
 
-// Define the region for your function
-exports.myFunction = functions.region('asia-southeast1').https.onRequest((request, response) => {
-  response.send("Hello from Firebase!");
-});
+// // Define the region for your function
+// exports.myFunction = functions.region('asia-southeast1').https.onRequest((request, response) => {
+//   response.send("Hello from Firebase!");
+// });
 
 // Sign in // Sign in // Sign in // Sign in
 function handleCredentialResponse(response) {
