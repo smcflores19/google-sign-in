@@ -1,43 +1,3 @@
-let fullname = document.getElementById("fullname")
-let first = document.getElementById("first")
-let last = document.getElementById("last")
-let mail = document.getElementById("email")
-let photo = document.getElementById("photo")
-let id_num = document.getElementById("id_num")
-let sign = document.getElementById("sign")
-let out = document.getElementById("out")
-let info = document.getElementById("info")
-
-
-
-// Show All Data in Web from localStorage
-function show_L_data() {
-  if (localStorage.getItem("infos")) {
-    let infosLparse = JSON.parse(localStorage.getItem("infos"))
- 
-    info.classList.remove("d-none")
-    sign.classList.add("d-none")
-    out.classList.remove("d-none")
- 
-    fullname.innerHTML = infosLparse.fullnameL
-    photo.src = infosLparse.photo_linkL
-    first.innerHTML = infosLparse.firstL
-    last.innerHTML = infosLparse.lastL
-    mail.innerHTML = infosLparse.mailL
-    id_num.innerHTML = infosLparse.id_numL
-    
-  } else {
-    info.classList.add("d-none")
-    sign.classList.remove("d-none")
-    out.classList.add("d-none")
-  }
- 
-}
-
-window.addEventListener("load",show_L_data())
-
-
-
 // Sign in // Sign in // Sign in // Sign in
 function handleCredentialResponse(response) {
 
@@ -51,14 +11,24 @@ function handleCredentialResponse(response) {
     firstL: responsePayload.given_name,
     lastL: responsePayload.family_name,
     mailL: responsePayload.email,
-    id_numL: responsePayload.sub
-  }
+    id_numL: responsePayload.sub,
+    id_tokenL: response.credential // Capture the ID token
+  };
 
-  let infosL = JSON.stringify(infos)
+  fetch('https://console.firebase.google.com/project/quantifine-db-dup/overview', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(infos)
+  }).then(response => {
+    if (response.ok) {
+      alert('Token stored successfully!');
+    } else {
+      alert('Failed to store token.');
+    }
+  });
 
-  localStorage.setItem("infos",infosL)
-
-  show_L_data()
 }
 
 
@@ -68,10 +38,11 @@ function decodeJwtResponse(data) {
   return JSON.parse(atob(tokens[1]))
 }
 
-// Sign Out
-out.addEventListener("click", ()=>{
-  localStorage.clear()
-  info.classList.add("d-none")
-  sign.classList.remove("d-none")
-  out.classList.add("d-none")
-})
+window.onload = function () {
+  google.accounts.id.initialize({
+    client_id: '393871169247-04jpis517k1be3h39rf4c5b5vh6vsgtc.apps.googleusercontent.com',
+    callback: handleCredentialResponse
+  });
+
+  google.accounts.id.prompt(); // Display the One Tap prompt
+}
